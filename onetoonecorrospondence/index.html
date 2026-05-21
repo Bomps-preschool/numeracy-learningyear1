@@ -1,1 +1,899 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>
+One to One Correspondence
+</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#f2c521;
+font-family:Arial,sans-serif;
+overflow:hidden;
+touch-action:none;
+}
+
+/* MAIN SHEET */
+
+.game-sheet{
+width:96%;
+height:96vh;
+background:#f4f4f4;
+margin:2vh auto;
+border:3px solid #333;
+border-radius:20px;
+position:relative;
+overflow:hidden;
+padding:10px;
+}
+
+/* SPLASH */
+
+#splash{
+position:fixed;
+inset:0;
+background:#ffffff;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+border:4px solid #ffd400;
+}
+
+#splash img{
+width:240px;
+max-width:75%;
+object-fit:contain;
+}
+
+/* TOPBAR */
+
+.topbar{
+display:flex;
+justify-content:flex-start;
+align-items:center;
+font-size:clamp(14px,2vw,22px);
+font-weight:bold;
+margin-bottom:5px;
+}
+
+/* TITLE */
+
+.title-box{
+width:min(300px,90%);
+background:#f2c521;
+margin:8px auto;
+padding:10px;
+text-align:center;
+border:2px solid #333;
+border-radius:14px;
+font-size:clamp(16px,2vw,24px);
+font-weight:bold;
+}
+
+/* INSTRUCTION */
+
+.instruction{
+text-align:center;
+font-size:clamp(14px,2vw,22px);
+margin:10px 5px;
+line-height:1.4;
+}
+
+/* GAME AREA */
+
+#gameArea{
+height:68vh;
+display:flex;
+flex-direction:column;
+justify-content:space-evenly;
+}
+
+/* ROW */
+
+.row{
+position:relative;
+width:100%;
+height:18vh;
+min-height:90px;
+}
+
+/* LEFT IMAGE */
+
+.left-img{
+position:absolute;
+left:2%;
+top:50%;
+transform:translateY(-50%);
+width:clamp(55px,8vw,100px);
+height:clamp(55px,8vw,100px);
+object-fit:contain;
+user-select:none;
+-webkit-user-drag:none;
+touch-action:none;
+}
+
+/* RIGHT IMAGE */
+
+.right-img{
+position:absolute;
+right:2%;
+top:50%;
+transform:translateY(-50%);
+width:clamp(55px,8vw,100px);
+height:clamp(55px,8vw,100px);
+object-fit:contain;
+user-select:none;
+-webkit-user-drag:none;
+touch-action:none;
+}
+
+/* GREY DOTS */
+
+.left-dot{
+position:absolute;
+left:18%;
+top:50%;
+transform:translate(-50%,-50%);
+width:14px;
+height:14px;
+background:#888;
+border-radius:50%;
+z-index:3;
+}
+
+.right-dot{
+position:absolute;
+right:18%;
+top:50%;
+transform:translate(50%,-50%);
+width:14px;
+height:14px;
+background:#888;
+border-radius:50%;
+z-index:3;
+}
+
+/* DASH LINE */
+
+.dash-line{
+position:absolute;
+left:18%;
+right:18%;
+top:50%;
+transform:translateY(-50%);
+border-top:3px dashed #444;
+z-index:1;
+}
+
+/* GREEN LINE */
+
+.green-line{
+position:absolute;
+left:18%;
+width:0;
+top:50%;
+transform:translateY(-50%);
+border-top:5px solid transparent;
+z-index:2;
+}
+
+/* CORRECT */
+
+.correct{
+outline:3px solid green;
+border-radius:12px;
+background:#eaffea;
+}
+
+/* WRONG */
+
+.wrong{
+outline:3px solid red;
+border-radius:12px;
+background:#ffecec;
+}
+
+/* BUTTONS */
+
+.bottom-bar{
+position:absolute;
+bottom:10px;
+left:10px;
+right:10px;
+display:flex;
+justify-content:space-between;
+gap:10px;
+}
+
+button{
+flex:1;
+max-width:180px;
+padding:10px;
+font-size:clamp(12px,2vw,16px);
+border:none;
+border-radius:10px;
+background:#f2f2f2;
+cursor:pointer;
+font-weight:bold;
+}
+
+/* END SCREEN */
+
+#endScreen{
+display:none;
+text-align:center;
+margin-top:25vh;
+}
+
+#endScreen h1{
+color:green;
+font-size:clamp(24px,5vw,42px);
+margin-bottom:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+.game-sheet{
+height:97vh;
+padding:8px;
+}
+
+.row{
+height:16vh;
+}
+
+.left-dot{
+left:22%;
+}
+
+.right-dot{
+right:22%;
+}
+
+.dash-line{
+left:22%;
+right:22%;
+}
+
+.green-line{
+left:22%;
+}
+
+}
+
+/* TABLET */
+
+@media(min-width:768px){
+
+.row{
+height:16vh;
+}
+
+.left-dot{
+left:14%;
+}
+
+.right-dot{
+right:14%;
+}
+
+.dash-line{
+left:14%;
+right:14%;
+}
+
+.green-line{
+left:14%;
+}
+
+}
+
+/* LARGE SCREEN */
+
+@media(min-width:1200px){
+
+.game-sheet{
+max-width:1400px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH -->
+
+<div id="splash">
+
+<img src="assets/innovinelogo.png">
+
+</div>
+
+<!-- MAIN -->
+
+<div class="game-sheet">
+
+<div class="topbar">
+
+<div>
+Score:
+<span id="score">
+0
+</span>/24
+</div>
+
+</div>
+
+<div class="title-box">
+One to One Correspondence
+</div>
+
+<div class="instruction"
+id="instruction">
+
+Trace on the dotted line
+from the pictures on the left
+to the matching pictures on the right.
+
+</div>
+
+<div id="gameArea"></div>
+
+<!-- BUTTONS -->
+
+<div class="bottom-bar">
+
+<button onclick="restartGame()">
+Restart
+</button>
+
+<button onclick="toggleMute()">
+Mute / Unmute
+</button>
+
+</div>
+
+<!-- END SCREEN -->
+
+<div id="endScreen">
+
+<h1>
+You have done a great job!
+</h1>
+
+<button onclick="restartGame()">
+Play Again
+</button>
+
+</div>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" preload="auto">
+<source src="assets/correct.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSound" preload="auto">
+<source src="assets/wrong.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="clapSound" preload="auto">
+<source src="assets/claps.mp3" type="audio/mpeg">
+</audio>
+
+<!-- CONFETTI -->
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+
+/* QUESTIONS */
+
+const questions = [
+
+{
+instruction:
+"Trace on the dotted line from the ant to the apple.",
+
+left:"assets/ant.png",
+
+right:"assets/apple.jpg"
+},
+
+{
+instruction:
+"Trace on the dotted line from the arrow to the balloon.",
+
+left:"assets/arrow.png",
+
+right:"assets/balloon.png"
+},
+
+{
+instruction:
+"Trace on the dotted line from the butterfly to the flower.",
+
+left:"assets/butterfly.jpg",
+
+right:"assets/flower.png"
+},
+
+{
+instruction:
+"Trace on the dotted line from the duckling to the duck.",
+
+left:"assets/duckling.png",
+
+right:"assets/duck.png"
+},
+
+{
+instruction:
+"Trace on the dotted line from the eagle to the egg.",
+
+left:"assets/eagle.png",
+
+right:"assets/egg.png"
+},
+
+{
+instruction:
+"Trace on the dotted line from the monkey to the banana.",
+
+left:"assets/monkey.png",
+
+right:"assets/bananas.jpg"
+},
+
+{
+instruction:
+"Trace on the dotted line from the elephant to the tree.",
+
+left:"assets/elephant.png",
+
+right:"assets/green tree.jpg"
+},
+
+{
+instruction:
+"Trace on the dotted line from the boy to the football.",
+
+left:"assets/boy.png",
+
+right:"assets/football.png"
+}
+
+];
+
+/* VARIABLES */
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let muted = false;
+
+let completedRows = [];
+
+const gameArea =
+document.getElementById("gameArea");
+
+/* SPLASH */
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document.getElementById("splash")
+.style.display = "none";
+
+loadQuestion();
+
+},3000);
+
+});
+
+/* LOAD QUESTION */
+
+function loadQuestion(){
+
+if(currentQuestion >= questions.length){
+
+showEnd();
+
+return;
+
+}
+
+completedRows = [];
+
+const q =
+questions[currentQuestion];
+
+document.getElementById("instruction")
+.innerText =
+q.instruction;
+
+gameArea.innerHTML = "";
+
+for(let i=0;i<3;i++){
+
+gameArea.innerHTML += `
+
+<div class="row">
+
+<img
+src="${q.left}"
+class="left-img"
+id="left${i}"
+draggable="false"
+>
+
+<div class="left-dot"></div>
+
+<div class="dash-line"></div>
+
+<div class="green-line"
+id="line${i}">
+</div>
+
+<div class="right-dot"></div>
+
+<img
+src="${q.right}"
+class="right-img"
+id="right${i}"
+draggable="false"
+>
+
+</div>
+
+`;
+
+}
+
+enableTracing();
+
+}
+
+/* TRACING */
+
+function enableTracing(){
+
+let currentLine = null;
+
+let startX = 0;
+
+let activeRow = -1;
+
+for(let i=0;i<3;i++){
+
+const left =
+document.getElementById(`left${i}`);
+
+const right =
+document.getElementById(`right${i}`);
+
+const row =
+document.querySelectorAll(".row")[i];
+
+left.addEventListener("pointerdown",(e)=>{
+
+if(completedRows.includes(i)) return;
+
+activeRow = i;
+
+const rowRect =
+row.getBoundingClientRect();
+
+const leftDot =
+document.querySelectorAll(".left-dot")[i];
+
+const leftRect =
+leftDot.getBoundingClientRect();
+
+startX =
+(leftRect.left + leftRect.width/2)
+- rowRect.left;
+
+currentLine =
+document.getElementById(`line${i}`);
+
+currentLine.style.left =
+startX + "px";
+
+currentLine.style.width =
+"0px";
+
+});
+
+row.addEventListener("pointermove",(e)=>{
+
+if(activeRow !== i) return;
+
+const rowRect =
+row.getBoundingClientRect();
+
+const moveX =
+e.clientX - rowRect.left;
+
+const width =
+moveX - startX;
+
+if(width > 0){
+
+currentLine.style.borderTop =
+"5px solid green";
+
+currentLine.style.width =
+width + "px";
+
+}
+
+});
+
+row.addEventListener("pointerup",(e)=>{
+
+if(activeRow !== i) return;
+
+const rightRect =
+right.getBoundingClientRect();
+
+if(
+
+e.clientX >= rightRect.left &&
+
+e.clientX <= rightRect.right &&
+
+e.clientY >= rightRect.top &&
+
+e.clientY <= rightRect.bottom
+
+){
+
+handleCorrect(i);
+
+}else{
+
+handleWrong(right);
+
+currentLine.style.width =
+"0px";
+
+currentLine.style.borderTop =
+"5px solid transparent";
+
+}
+
+activeRow = -1;
+
+});
+
+}
+
+}
+
+/* CORRECT */
+
+function handleCorrect(i){
+
+if(completedRows.includes(i))
+return;
+
+completedRows.push(i);
+
+const line =
+document.getElementById(`line${i}`);
+
+const leftDot =
+document.querySelectorAll(".left-dot")[i];
+
+const rightDot =
+document.querySelectorAll(".right-dot")[i];
+
+const row =
+document.querySelectorAll(".row")[i];
+
+const rowRect =
+row.getBoundingClientRect();
+
+const leftRect =
+leftDot.getBoundingClientRect();
+
+const rightRect =
+rightDot.getBoundingClientRect();
+
+const startX =
+(leftRect.left + leftRect.width/2)
+- rowRect.left;
+
+const endX =
+(rightRect.left + rightRect.width/2)
+- rowRect.left;
+
+/* PERFECT GREEN LINE */
+
+line.style.left =
+startX + "px";
+
+line.style.borderTop =
+"5px solid green";
+
+line.style.width =
+(endX - startX) + "px";
+
+/* HIGHLIGHT */
+
+document.getElementById(`left${i}`)
+.classList.add("correct");
+
+document.getElementById(`right${i}`)
+.classList.add("correct");
+
+/* SOUND */
+
+if(!muted){
+
+const correct =
+document.getElementById("correctSound");
+
+correct.currentTime = 0;
+
+correct.volume = 1;
+
+correct.play().catch(()=>{});
+
+}
+
+/* CONFETTI */
+
+confetti({
+
+particleCount:50,
+
+spread:70
+
+});
+
+/* SCORE */
+
+score++;
+
+document.getElementById("score")
+.innerText = score;
+
+/* NEXT QUESTION */
+
+if(completedRows.length === 3){
+
+if(!muted){
+
+const clap =
+document.getElementById("clapSound");
+
+clap.currentTime = 0;
+
+clap.volume = 1;
+
+clap.play().catch(()=>{});
+
+}
+
+setTimeout(()=>{
+
+currentQuestion++;
+
+loadQuestion();
+
+},1500);
+
+}
+
+}
+
+/* WRONG */
+
+function handleWrong(element){
+
+element.classList.add("wrong");
+
+if(!muted){
+
+const wrong =
+document.getElementById("wrongSound");
+
+wrong.currentTime = 0;
+
+wrong.volume = 1;
+
+wrong.play().catch(()=>{});
+
+}
+
+setTimeout(()=>{
+
+element.classList.remove("wrong");
+
+},700);
+
+}
+
+/* RESTART */
+
+function restartGame(){
+
+location.reload();
+
+}
+
+/* MUTE */
+
+function toggleMute(){
+
+muted = !muted;
+
+}
+
+/* END */
+
+function showEnd(){
+
+gameArea.style.display =
+"none";
+
+document.querySelector(".instruction")
+.style.display =
+"none";
+
+document.querySelector(".bottom-bar")
+.style.display =
+"none";
+
+document.getElementById("endScreen")
+.style.display =
+"block";
+
+if(!muted){
+
+const clap =
+document.getElementById("clapSound");
+
+clap.currentTime = 0;
+
+clap.volume = 1;
+
+clap.play().catch(()=>{});
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
+```
 
