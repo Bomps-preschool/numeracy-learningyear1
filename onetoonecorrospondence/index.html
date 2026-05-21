@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -476,7 +475,7 @@ instruction:
 
 left:"assets/elephant.png",
 
-right:"assets/green tree.jpg"
+right:"assets/green-tree.jpg"
 },
 
 {
@@ -567,6 +566,7 @@ src="${q.right}"
 class="right-img"
 id="right${i}"
 draggable="false"
+onerror="this.style.display='none'"
 >
 
 </div>
@@ -883,4 +883,3 @@ clap.play().catch(()=>{});
 
 </body>
 </html>
-```
